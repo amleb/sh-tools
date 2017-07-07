@@ -2,7 +2,26 @@
 
 function install() {
     git pull origin master;
-    rsync -br --suffix="~" dotfiles/ $HOME/ && echo "Dotfiles has been copied (backups created with \"~\" suffix).";
+
+    rsync -br --suffix="~" dotfiles/ $HOME/ \
+        && echo "Dotfiles has been copied (backups created with \"~\" suffix)."
+
+    pwd=`pwd`
+
+    if [[ ${pwd} == *"${PATH}"* ]]; then
+        echo $pwd already in PATH variable
+    else
+        sed -i s+__SET_PATH__+":${pwd}"+ $HOME/.bashrc
+        if [ $? -eq 0 ]; then
+            echo ${pwd} has been added to $PATH
+        else
+            echo .bashrc file has not been added due to setting $PATH error
+            if [ -f $HOME/.bashrc~ ]; then
+                mv $HOME/.bashrc~ $HOME/.bashrc
+                echo .bashrc has been restored from backup
+            fi
+        fi
+    fi
 }
 
 read -p "Are you sure you want to install dotfiles? (this may overwrite your existing files)" yn

@@ -116,4 +116,4 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=$PATH":$HOME/bin/tools"
+export PATH=$PATH__SET_PATH__
