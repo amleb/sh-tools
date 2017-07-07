@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+function install() {
+    git pull origin master;
+    rsync -br --suffix="~" dotfiles/ $HOME/ && echo "Dotfiles are copied (backups created with \"~\" suffix).";
+}
+
+read -p "Are you sure you want to install dotfiles? (this may overwrite your existing files)" yn
+
+case $yn in
+    [Yy]* ) install;;
+    [Nn]* ) exit;;
+    * ) echo "Please answer yes or no.";;
+esac
