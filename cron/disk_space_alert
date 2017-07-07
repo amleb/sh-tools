@@ -10,7 +10,7 @@ if ! [[ $1 =~ $re ]] ; then
 fi
 
 re='^[0-9]+$'
-if ! [[ $1 =~ $re ]] ; then
+if ! [[ $2 =~ $re ]] ; then
    echo "Please specify percentage." >&2; exit 1
 fi
 
