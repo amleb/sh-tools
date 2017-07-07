@@ -1,2 +1,4 @@
 # sh-tools
-Bash tools.
+Bash tools and dotfiles.
+
+Work in progress...
