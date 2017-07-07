@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+#Makes a directory (/tmp/deploy) with files changes in latest N commits
+#and runs composer install if composer.lock file was changed
+
+#Usage: deploy N
+
+set -e
+
+composerLock=false
+
+re='^[0-9]+$'
+if ! [[ $1 =~ $re ]] ; then
+   echo "Please specify number of latest commits." >&2; exit 1
+fi
+
+branch=$(git branch | grep '*' | cut -c3-)
+if [ ${branch} != 'master' ]; then
+    read -p "You are not on the master branch! Are you want to continue with branch \"${branch}\"?" yn
+    case $yn in
+        [Yy]* ) ;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+fi
+
+if [ -d /tmp/deploy ]; then
+    rm -rf /tmp/deploy/*
+else
+    mkdir /tmp/deploy
+fi
+
+git log -$1 --pretty=format: --name-only | sort | uniq \
+| xargs -r -I {} bash -c "[[ -f {} ]] && cp --parents {} /tmp/deploy/ && echo {}" \
+| grep composer.lock > /dev/null && composerLock=true
+
+
+if $composerLock; then
+    tFile=$(mktemp)
+    composerFile=$(find `pwd` -maxdepth 2 -name composer.lock | xargs -n 1)
+    pushd $(dirname $composerFile)
+    echo Running composer...
+    composer install --no-dev -o -q -n
+    popd
+    find -type f -newer $tFile | xargs -r -I {} cp --parents {} /tmp/deploy/
+fi
+
+echo All Done - generated patch directory: /tmp/deploy
+
