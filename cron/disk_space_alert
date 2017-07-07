@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+#Send email if used disk space is more than N percent
+#
+#Usage: disk_space_alert email percent
+
+re='.*@.*'
+if ! [[ $1 =~ $re ]] ; then
+   echo "Please specify email address." >&2; exit 1
+fi
+
+re='^[0-9]+$'
+if ! [[ $1 =~ $re ]] ; then
+   echo "Please specify percentage." >&2; exit 1
+fi
+
+df -H | grep -vE '^Filesystem|tmpfs|cdrom' | awk '{ print $5 " " $1 }' | while read output;
+do
+  echo $output
+  used=$(echo $output | awk '{ print $1}' | cut -d'%' -f1  )
+  partition=$(echo $output | awk '{ print $2 }' )
+  if [ $used -ge $2 ]; then
+    echo "Running out of space \"$partition ($used%)\" on ${HOSTNAME}" |
+    mail -s "Alert: Almost out of disk space $used%" $1
+  fi
+done
