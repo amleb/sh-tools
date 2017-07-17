@@ -8,18 +8,14 @@ function install() {
 
     pwd=`pwd`
 
-    if [[ ${pwd} == *"${PATH}"* ]]; then
-        echo $pwd already in PATH variable
+    sed -i s+__SET_PATH__+":${pwd}"+ $HOME/.bashrc
+    if [ $? -eq 0 ]; then
+        echo ${pwd} has been added to $PATH
     else
-        sed -i s+__SET_PATH__+":${pwd}"+ $HOME/.bashrc
-        if [ $? -eq 0 ]; then
-            echo ${pwd} has been added to $PATH
-        else
-            echo .bashrc file has not been added due to setting $PATH error
-            if [ -f $HOME/.bashrc~ ]; then
-                mv $HOME/.bashrc~ $HOME/.bashrc
-                echo .bashrc has been restored from backup
-            fi
+        echo .bashrc file has not been added due to setting $PATH error
+        if [ -f $HOME/.bashrc~ ]; then
+            mv $HOME/.bashrc~ $HOME/.bashrc
+            echo .bashrc has been restored from backup
         fi
     fi
 }
