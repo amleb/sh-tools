@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
 
 function install() {
-    git pull origin master;
+    #git pull origin master;
 
     rsync -br --suffix="~" dotfiles/ $HOME/ \
         && echo "Dotfiles has been copied (backups created with \"~\" suffix)."
 
-    pwd=`pwd`
+    pwd=`pwd`/tools
 
-    sed -i s+__SET_PATH__+":${pwd}"+ $HOME/.bashrc
-    if [ $? -eq 0 ]; then
+    echo $PATH | grep $pwd
+
+    if [ $? != 0 ]; then
+        sed -i s+__SET_PATH__+":${pwd}"+ $HOME/.bashrc
+    else
+        sed -i s+__SET_PATH__++ $HOME/.bashrc
+    fi
+
+    if [ $? == 0 ]; then
         echo ${pwd} has been added to $PATH
     else
         echo .bashrc file has not been added due to setting $PATH error

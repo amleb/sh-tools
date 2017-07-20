@@ -116,4 +116,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
+#this will be overwriten by install script
 export PATH=$PATH__SET_PATH__
