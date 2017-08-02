@@ -7,7 +7,7 @@ function install() {
         && echo "Dotfiles has been copied (backups created with \"~\" suffix)."
 
     dir=`pwd`
-    tools=${pwd}/tools
+    tools=${dir}/tools
 
     echo $PATH | grep $tools
 
