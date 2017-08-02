@@ -25,6 +25,10 @@ set incsearch
 " show file title
 set title
 
+" add SWIG syntax
+au BufNewFile,BufRead *.i set filetype=swig
+au BufNewFile,BufRead *.swg set filetype=swig
+
 " Load plugins {{{
 call plug#begin('~/.vim/plugged')
 
