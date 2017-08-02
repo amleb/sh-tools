@@ -24,3 +24,11 @@ set incsearch
 
 " show file title
 set title
+
+" Load plugins {{{
+call plug#begin('~/.vim/plugged')
+
+Plug 'blockloop/vim-swigjs'
+
+call plug#end()
+" }}}
