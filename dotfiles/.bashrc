@@ -116,5 +116,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+#show current directory after leaving mc
+mc_wrapper=`locate -l 1 mc-wrapper.sh`
+if [ $? ]; then
+    alias mc='. '$mc_wrapper
+fi
+
 #this will be overwritten by install script
 export PATH=$PATH__SET_PATH__
