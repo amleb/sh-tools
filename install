@@ -9,13 +9,7 @@ function install() {
     dir=`pwd`
     tools=${dir}/tools
 
-    echo $PATH | grep $tools
-
-    if [ $? != 0 ]; then
-        sed -i s+__SET_PATH__+":${tools}"+ $HOME/.bashrc
-    else
-        sed -i s+__SET_PATH__++ $HOME/.bashrc
-    fi
+    sed -i s+__SET_PATH__+":${tools}"+ $HOME/.bashrc
 
     if [ $? == 0 ]; then
         echo ${tools} has been added to \$PATH
