@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+#Extracts .pfx files to .cer .key and .crt files
+
+#Usage: pfx file.pfx name
+#where "name" is name of created files
+
+
+if [ $# -ne 2 ]; then
+    echo "Usage: pfx file.pfx name"; exit 1
+fi
+
+if ! [ -f $1 ] ; then
+   echo "File does not exists." >&2; exit 1
+fi
+
+tmpFile=$(mktemp)
+read -s -p "Enter Password: " pass
+echo $pass > $tmpFile
+
+openssl pkcs12 -passin file:$tmpFile -in $1 -clcerts -nokeys -out $2.cer
+openssl pkcs12 -passin file:$tmpFile -in $1 -nocerts -nodes  -out $2.key
+openssl pkcs12 -passin file:$tmpFile -in $1 -nodes -nokeys -cacerts -out $2.crt
+
+rm $tmpFile
