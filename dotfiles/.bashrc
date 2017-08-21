@@ -122,5 +122,19 @@ if [ $? ]; then
     alias mc='. '$mc_wrapper
 fi
 
-#this will be overwritten by install script
+#this line  will be overwritten by install script
 export PATH=$PATH__SET_PATH__
+
+#set vim as default editor
+export EDITOR=vim
+
+#cleaning system
+alias clean='sudo apt-get -f install && sudo apt-get autoremove && sudo apt-get -y autoclean && sudo apt-get -y clean  && notify-send Clearing Done'
+
+#git aliases
+git config --global alias.st status
+git config --global alias.l "log --graph --all --decorate --oneline"
+
+#fast access to server errors using lnav
+alias le='lnav /var/log/apache2/error.log'
+alias lx='lnav /var/log/nginx/error.log'
