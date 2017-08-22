@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+#Creates backup of all postgres databases and removes backup older than 7 days
+#Usage: postgres_backup user [optional, default is "postgres"]
+
+if [ -z $1 ]; then
+    user="postgres"
+else
+    user=$1
+fi
+
+path="/backup/postgres/daily"
+if [ ! -d "$path" ]
+then
+    umask 0077
+    mkdir -p $path
+fi
+umask 0177
+
+for db in `psql -U $user -d postgres -q -t -c 'SELECT datname FROM pg_database' | grep -v postgres`
+do
+    dump="${db}_`date '+%F'`.sql"
+    pg_dump -U $user -Fc $db > $path/$dump
+    gzip $path/$dump
+
+    remove="${db}_`date --date '7 days ago' '+%F'`.sql.gz"
+    if [ -f "$path/$remove" ]; then
+        rm -f -- "$path/$remove"
+    fi
+done
