@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-path="/backup/mysql/mysql.daily"
+#Creates backup of all MySql databases and removes backups older than 7 days
+#Usage ./mysql_backup
+
+path="/backup/mysql/daily"
 if [ ! -d "$path" ]
 then
     umask 0077
